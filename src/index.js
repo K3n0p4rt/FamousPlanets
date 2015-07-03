@@ -33,9 +33,9 @@ var Light = function (x, y, z, color) {
 }
 
 var light1 = new Light (200,400,400,'white')
-//var light2 = new Light (0,400,400,'lightgrey')
-//var light3 = new Light (0,200,0,'grey')
-//var light4 = new Light (0,600,0,'white')
+var light2 = new Light (2000,400,2000,'#222222')
+var light3 = new Light (0,100,0,'#444444')
+var light4 = new Light (0,700,0,'#444444')
 
 //Planet Constructor
 var Planet = function (x, y, z, size, rperiod, operiod, textureDirectory) {
@@ -85,8 +85,8 @@ Planet.prototype.onUpdate = function onUpdate (time) {
     this.node.requestUpdateOnNextTick(this.id);
 }
 
-var time1 = 10
-var time2 = 10
+var time1 = 100
+var time2 = 100
 
 var sunny = new Planet(0,400,0,300,600*time1,0,'/images/sun.jpg')
 var mercury = new Planet(200,400,0,40,1408*time1,88*time2,'/images/mercury.jpg')
@@ -98,12 +98,36 @@ var saturn = new Planet(950,400,0,180,11*time1,10585*time2,'/images/saturn.jpg')
 var uranus = new Planet(1200,400,0,160,17*time1,30660*time2,'/images/uranus.jpg')
 var nepturn = new Planet(1450,400,0,160,16*time1,60225*time2,'/images/neptune.jpg')
 
+
 //Camera (WIP) (VERY EXPERIMENTAL)
 
+var cameranode = scene.addChild();
+var camera = new Camera(cameranode);
+camera.setDepth(1500);
+//cameranode.requestUpdate(camera);
 
+var Satellite = function (planet,shape,xa,ya,za,size,xo,yo,zo,textureDirectory) {
+	this.satellite = planet.node.addChild();
+	this.satellitemesh = new Mesh(this.satellite);
+    this.satellitetexture = new Material.Texture(textureDirectory);
+    this.sid = this.satellite.addComponent(this);
+	
+	this.satellitemesh.setGeometry(shape,{detail: 100,});
+    this.satellitemesh.setBaseColor(this.satellitetexture);
 
+    this.satellite.setSizeMode('absolute','absolute','absolute')
+    	.setAbsoluteSize(size, size, 20)
+        .setAlign(xa,ya,za)
+        .setMountPoint(0.5, 0.5, 0.5)
+        .setOrigin(xo,yo,zo);
+	
+	this.satellite.setRotation(1.7, 0, 0);
+	
+	this.satellite.requestUpdate(this.sid);
+};
 
+var saturnrings = new Satellite(saturn,'Torus',0.5,0.5,0.5,300,0.5,0.5,0.5,'/images/saturnrings.jpg');
 
-
+sunny.mesh.setFlatShading(true);
 
 
